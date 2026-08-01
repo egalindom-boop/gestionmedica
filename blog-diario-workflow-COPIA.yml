@@ -1,0 +1,36 @@
+# Publicación diaria automática de un artículo en gestionmedica.org
+# IMPORTANTE: este archivo debe estar en .github/workflows/blog-diario.yml
+# Requiere el secret ANTHROPIC_API_KEY en Settings -> Secrets and variables -> Actions
+name: Blog diario
+
+on:
+  schedule:
+    - cron: '37 12 * * *'   # todos los días a las 12:37 UTC
+  workflow_dispatch: {}      # permite lanzarlo a mano desde la pestaña Actions
+
+permissions:
+  contents: write
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generar y publicar artículo
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/generar_post.py
+
+      - name: Commit y push
+        run: |
+          git config user.name "robot-blog"
+          git config user.email "robot-blog@users.noreply.github.com"
+          git add -A
+          git commit -m "Blog: nuevo artículo diario" || exit 0
+          git pull --rebase -X ours origin main
+          git push origin main
