@@ -10,6 +10,7 @@ Robot de blog diario de gestionmedica.org
 import os, re, json, random, time, unicodedata, html
 from datetime import date
 from urllib import request as urlreq
+import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 API_KEY = os.environ['ANTHROPIC_API_KEY']
@@ -167,7 +168,10 @@ insertar(f'category/{cat}/index.html', '<!-- AUTO:LISTA -->', f"""<li class="tar
 <p class="fecha">{fecha} · Editor</p>
 </div></li>""")
 # sitemap
-insertar('sitemap.xml', '<!-- AUTO:SITEMAP -->', f'<url><loc>{SITE}/{slug}/</loc><lastmod>{iso}</lastmod></url>')
+# sitemap: se regenera entero desde la fecha real de cada página,
+# para que el lastmod nunca se quede congelado
+import subprocess
+subprocess.run([sys.executable, os.path.join(RAIZ, 'scripts', 'generar_sitemap.py'), RAIZ], check=False)
 
 # registrar tema usado
 usados.append(tema)
