@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /scripts/
 
 # Rastreadores de buscadores y de sistemas de IA: acceso completo permitido
 User-agent: OAI-SearchBot

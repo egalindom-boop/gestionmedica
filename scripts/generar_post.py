@@ -130,7 +130,7 @@ titulo_e = html.escape(articulo['titulo'])
 desc_e = html.escape(articulo['desc'])
 
 # ---------- crear página del post a partir de la plantilla ----------
-plantilla = open(os.path.join(RAIZ, 'scripts', 'plantilla_post.html'), encoding='utf-8').read()
+plantilla = open(os.path.join(RAIZ, 'scripts', 'plantilla_post.tpl'), encoding='utf-8').read()
 pagina = (plantilla
     .replace('{{TITULO}}', titulo_e)
     .replace('{{DESCRIPCION}}', desc_e)
